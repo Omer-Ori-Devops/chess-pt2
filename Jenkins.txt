@@ -1,0 +1,38 @@
+To automate the startup of jenkins you must:
+1. create a dockerfile for jenkins image
+2. set this env to disable startup setup : ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+3. create a pluginx.txt in you dir and copy it : COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+4. create a casc.yaml file this will be where our main configuration lives COPY casc.yaml /usr/share/jenkins/ref/casc.yaml
+5. set env for CASC : ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/casc.yaml
+6. in the run process run the plugin installation via: RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+
+
+
+
+to use secret file credentials you need to encode the file in base64 before hand and all 5 file fields must be filld in order for it to work
+
+
+https://www.digitalocean.com/community/tutorials/how-to-automate-jenkins-setup-with-docker-and-jenkins-configuration-as-code
+
+to disable startup use the enviroment variable:
+key: JAVA_OPTS 
+value: -Djenkins.install.runSetupWizard=false
+
+docker buildx build -f jenkins.dockerfile -t omerandori/chess-jenkins:latest .
+
+https://stackoverflow.com/questions/75609001/how-do-i-add-secret-file-credentials-to-a-job-in-jenkins-casc
+
+ENVS:
+CASC_JENKINS_CONFIG #where the casc.yaml file is located
+JENKINS_ADMIN_PASSWORD
+JENKINS_URL=http://${JENKINS_HOST}:${JENKINS_PORT}/
+JENKINS_KUBE_CONFIG
+
+
+next steps:
+1. make the kubeconfig retreive the relevent data token ca etc
+2. add the complete pipeline to casc
+3. try to elimate docker username and password
+4. kubeconfig needs to be imported into jenkins volume after the control plane is configured
+
+TOKEN=$(kubectl get secret secret-token-jenkins -n jenkins -o jsonpath='{.data.token}'| base64 -d )

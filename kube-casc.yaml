@@ -1,0 +1,31 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: ${JENKINS_ADMIN_PASSWORD}
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+  clouds:
+    - kubernetes:
+        name: "chess-cluster"
+        skipTlsVerify: false
+        namespace: "jenkins"
+        credentialsId: "jenkins-kub"
+unclassified:
+  location:
+    url: ${JENKINS_URL}
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - file:
+              scope: SYSTEM
+              id: kube-config
+              fileName: "kube-config"
+              secretBytes: "${file:/var/jenkins_home/kubeconfig}"
+              description: "kube-config"

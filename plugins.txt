@@ -1,0 +1,9 @@
+matrix-auth:latest
+configuration-as-code:latest
+plain-credentials:latest
+kubernetes:latest
+kubernetes-credentials-provider:latest
+workflow-aggregator:latest
+workflow-cps:latest
+git:latest
+kubernetes-cli:latest

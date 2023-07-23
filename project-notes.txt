@@ -1,0 +1,70 @@
+General notes for the project for project
+
+# cluster join command
+kubeadm token create --print-join-command 
+
+# command to run kubeadm without appropriate resources (in case i want to use t2.micro instead of medium)
+sudo kubeadm init --ignore-preflight-errors=NumCPU,Mem
+
+# modules run based on there order in the root module and thus can set an order check for relevent modules:
+  https://registry.terraform.io/search/modules?provider=aws&q=modules
+
+# to refrence values from child modules in root modules i need to output the value
+
+# Kuberentes provider docs:
+https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
+https://developer.hashicorp.com/terraform/tutorials/kubernetes/kubernetes-provider
+
+# AWS Provider docs
+https://registry.terraform.io/providers/hashicorp/aws/3.63.0/docs
+
+# command to push to s3
+/usr/local/bin/aws s3 cp /home/ubuntu/manifest/ s3://manifestchess/manifest --recursive
+
+kube public ip
+https://stackoverflow.com/questions/61871640/access-kubernetes-api-remotely
+
+
+https://kodekloud.com/topic/pre-requisite-security-in-docker-2/
+get a better understanding of how to run commands from inside the container to the host machine
+10. check regarding service account and role(group) role binding(binds service account to a role)
+kubectl auth can -i (this checks premmissions)
+
+
+Multi master configuration with exported etcd
+
+
+Terraform priority:
+	prerequisits:
+        1. setup agro in cluster once its boostraped ( in credentials-script.tftpl script)
+        2. get a better understanding regarding the volume claims and efs (possibly change to ebs)
+        3. on backend install a way to see logs on express server like morgan for example
+
+        Jenkins:
+          1. make casc use the jenkins file 
+          2. check regarding pulling and pushing to github repos  
+          3. configure the pipeline to change a value of image id in a the deployment manifest before pushing it to its repo (yq)
+          4. remove docker credentials (check if can be used in conjunction with kaniko)
+    AWS:
+
+        1.Subnet (currently on the same cidr as vpc)
+        2.SSM and lambda setup 
+
+    Argocd:
+        1. check how to install in terraform 
+        2. understand how to give external access to argo and create it in a declrative fashion
+
+    Github:
+      1. create 3 repos source code repo, helm repo for manifests, terraform repo for infra
+    Promethues:
+      1. how to install it on our cluster
+
+    Helm:
+     1. build helm chart for application stack
+     2. check if i want to build a chart for jenkins
+     3. ingress-nginx helm repo: https://kubernetes.github.io/ingress-nginx
+    Kaniko:
+    1. kaniko installation and how it works 
+    2.
+    application:
+     1. fix new docker images envs

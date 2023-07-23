@@ -1,0 +1,10 @@
+Terraform: 
+	create the infrastructure in aws and installation of kubeadm argocd 
+Helm?:
+	package the application for initial deployment see how to integrate this with argo and see if you need helm even using argo
+ArgoCD:
+	continues deployment for our project will deploy updates and the application to the cluster
+Jenkins:
+    continues integration for our project will be deployed with argo 
+Github: 
+	2 repos one for source code and application and one for kubernetes manifests and helm chart if used

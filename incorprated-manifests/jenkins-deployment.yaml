@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deploy-jenkins
+  name: deploy-jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-jenkins
+  template:
+    metadata:
+      labels:
+        app: deploy-jenkins
+    spec:
+      #serviceAccountName: jenkins
+      volumes:
+       - name: host-volume
+         hostPath:
+           path: /home/jenkins
+      containers:
+       - image: jenkins/jenkins:lts #omerandori/chess-jenkins:latest
+         name: jenkins
+         volumeMounts:
+          - name: host-volume
+            mountPath: /var/jenkins_home
