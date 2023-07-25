@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: deploy-jenkins
+  name: deploy-jenkins
+  namespace: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deploy-jenkins
+  template:
+    metadata:
+      labels:
+        app: deploy-jenkins
+    spec:
+      containers:
+      - image: jenkins/jenkins:lts
+        name: jenkins
+        volumeMounts:
+        - mountPath: /var/jenkins_home
+          name: jenkins-volume
+      volumes:
+      - name: jenkins-volume
+        persistentVolumeClaim:
+          claimName: efs-pvc
+      tolerations:
+       - key: "tool"
+         operator: "Equal"
+         value: "chess"
+         effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: chess
+                operator: In
+                values:
+                - tool
+

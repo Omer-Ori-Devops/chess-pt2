@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: chess
+  name: deploy-mongo
+  namespace: kube-tool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      instance: pod-mongo
+  template:
+    metadata:
+      labels:
+        instance: pod-mongo
+    spec:
+      containers:
+      - image: mongo:latest
+        name: mongodb
+        imagePullPolicy: Always
+        args:
+        - --port=27017
+        envFrom:
+        - configMapRef:
+            name: configmap-mongo
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-volume
+      volumes:
+      - name: mongo-volume
+        persistentVolumeClaim:
+          claimName: efs-pv-mongo
+      tolerations:
+       - key: "tool"
+         operator: "Equal"
+         value: "chess"
+         effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: chess
+                operator: In
+                values:
+                - tool
+

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-nginx-test
+  name: {{ .Release.Name }}-ingress-nginx
   annotations:
     nginx.ingress.kubernetes.io/affinity: "cookie"
     nginx.ingress.kubernetes.io/session-cookie-name: "my_session_cookie"
@@ -15,13 +15,13 @@ spec:
           pathType: Prefix
           backend:
            service:
-            name: backend
+            name: {{ .Release.Name }}-backend
             port:
               number: 5000
         - path: /
           pathType: Prefix
           backend:
            service:
-            name: frontend
+            name: {{ .Release.Name }}-frontend
             port:
               number: 3000

@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: storageClass
+metadata:
+  name: storage-class-ebs
+provisioner: kubernetes.io/aws-ebs
+paremeters:
+  type: gp2
+  

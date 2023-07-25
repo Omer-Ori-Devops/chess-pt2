@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: chess
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      instance: {{ .Release.Name }}-pod-frontend
+  template:
+    metadata:
+      name: front
+      labels:
+        instance: {{ .Release.Name }}-pod-frontend
+    spec:
+      containers:
+      - name: front
+        image: {{ .Values.frontend.repository}}:{{ .Values.frontend.tag}}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name}}-configmap-frontend

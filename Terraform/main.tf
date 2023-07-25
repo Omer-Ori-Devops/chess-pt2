@@ -31,5 +31,6 @@ module "kubeadm-bootstrap" {
     private_key_file = "location of private key"
     public_key_file = "location of public key"
     kubeconfig = "kubeconfig.conf"
+    argo_pass = "argocd password"
 }
 

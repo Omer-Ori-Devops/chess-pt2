@@ -1,6 +1,10 @@
-create namespace argocd
-kubectl apply -f on the yaml file
+
+kubectl create ns argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml 
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+to get port in cli:
+kubectl get svc -n argocd argocd-server -o=jsonpath='{.spec.ports[?(@.port==80)].nodePort}'
+
 install argocd cli:
 '''
 curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
@@ -9,4 +13,6 @@ rm argocd-linux-amd64
 '''
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath={.data.password} | base64 -d
 argocd login #SERVER_URL(IP AND PORT IF THERE IS NO HTTPS/HTTP) --username --password
+argocd login http://example.com:8080 --username myuser --password mypassword
+
 argocd app create my-app --file my-app.yaml

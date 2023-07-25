@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deploy-backend
+  labels:
+    app: chess
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      instance: {{ .Release.Name }}-pod-backend
+  template:
+    metadata:
+      name: back
+      labels:
+        instance: {{ .Release.Name }}-pod-backend
+    spec:
+      containers:
+      - name: back
+        image: {{ .Values.backend.repository}}:{{ .Values.backend.tag }}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-configmap-backend

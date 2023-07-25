@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: chess
+spec:
+  selector:
+    instance: {{ .Release.Name }}-pod-frontend
+  ports:
+    - port: 3000
+      targetPort: 3000
+

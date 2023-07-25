@@ -1,0 +1,16 @@
+frontend:
+  repository: omerandori/chess-client
+  tag: testing
+  replicas: 3
+
+backend:
+  repository: omerandori/chess-server
+  tag: testing
+mongo_uri: "mongodb://mongo:chess-db@mongo:27017/"
+
+alb_url: chess-ops-nlb-e22387fff66ccf95.elb.eu-central-1.amazonaws.com
+efsId: fs-0e3185a80e6d2a5c4
+
+mongo:
+  repository: mongo
+  tag: latest

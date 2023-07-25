@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-frontend
+data:
+  REACT_APP_HOST: url for backend
+  JENKINS_URL: "http://3.122.232.240:30008/"
+  JENKINS_ADMIN_PASSWORD: babababa #jenkinspassword
+  CASC_JENKINS_CONFIG: /usr/share/jenkins/ref/casc.yaml
+  #CASC_JENKINS_CONFIG: /var/jenkins_home/casc.yaml

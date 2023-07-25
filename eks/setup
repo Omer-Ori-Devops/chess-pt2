@@ -1,0 +1,11 @@
+to use eks with kubeadm cluster you need to do the following:
+1. create a role of type Custome trust policy with the trust relationship in the dir and assigne it the premmissions defined in the premmisions file
+2. join the cluster and download the yaml file you will need to modify the cluster role in the yaml to have these premmsisions:
+"""
+  - apiGroups: [""]
+    resources: ["users"]
+    verbs: ["impersonate"]
+  - nonResourceURLs: ["/version"]
+    verbs: ["get"]
+"""
+3. then you will need to create a clusterrole and role binding for your aws account that is configured in the aws configure of the ec2 instance

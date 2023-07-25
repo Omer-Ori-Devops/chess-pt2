@@ -202,6 +202,7 @@ resource "aws_instance" "master" {
       master_public_ip  = aws_eip.master.public_ip,
       master_private_ip = null,
       worker_index      = null
+      argopass          = var.argo_pass
     }
   ) && templatefile(
     "${path.module}/credentials-script.tftpl",
