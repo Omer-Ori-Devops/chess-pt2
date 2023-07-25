@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-frontend
   labels:
-    app: chess
+     {{- template "labels" . }}
 spec:
   selector:
     instance: {{ .Release.Name }}-pod-frontend

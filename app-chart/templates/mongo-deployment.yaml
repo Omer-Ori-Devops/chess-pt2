@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: chess
+    {{- template "labels" . }}
   name: {{ .Release.Name }}-deploy-mongo
 spec:
   replicas: 1
@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - image: {{ .Values.mongo.repository}}:{{ .Values.mongo.tag}}
-        name: mongodb
+        name: {{ .Release.Name }}-mongodb
         imagePullPolicy: Always
         args:
         - --port=27017
         volumeMounts:
         - mountPath: /data/db
-          name: mongo-volume
+          name: {{ .Release.Name }}-mongo-volume
       volumes:
-      - name: mongo-volume
+      - name: {{ .Release.Name }}-mongo-volume
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-mongo-pvc

@@ -93,3 +93,8 @@ variable "BUCKET" {
   type = string
   description = "S3 bucket id "  
 }
+
+variable "argo_pass" {
+  type = string
+  description = "argo_password "  
+}

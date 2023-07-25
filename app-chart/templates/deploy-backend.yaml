@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-deploy-backend
   labels:
-    app: chess
+     {{- template "labels"}}
 spec:
   replicas: 1
   selector:
@@ -11,12 +11,12 @@ spec:
       instance: {{ .Release.Name }}-pod-backend
   template:
     metadata:
-      name: back
+      name: backend
       labels:
         instance: {{ .Release.Name }}-pod-backend
     spec:
       containers:
-      - name: back
+      - name: backend
         image: {{ .Values.backend.repository}}:{{ .Values.backend.tag }}
         imagePullPolicy: Always
         envFrom:

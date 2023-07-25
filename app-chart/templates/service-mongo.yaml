@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-mongo-service
   labels:
-    app: chess
+    {{- template "labels" . }}
 spec:
   selector:
     instance: {{ .Release.Name }}-pod-mongo

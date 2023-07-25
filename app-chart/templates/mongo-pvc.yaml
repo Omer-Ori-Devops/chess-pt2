@@ -5,7 +5,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: efs-sc
+  storageClassName: {{.Release.name}}-mongo-efs-sc
   resources:
     requests:
       storage: 5Gi

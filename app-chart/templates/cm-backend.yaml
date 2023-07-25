@@ -5,5 +5,4 @@ metadata:
 data:
   CLIENT_URL: {{ .Values.alb_url }}
   MONGO_URI: {{ .Values.mongo_uri}}
-  #MONGO_URI: "mongodb://mongo:chess-db@mongo.kube-tool.svc.cluster.local:27017/chess"
                            

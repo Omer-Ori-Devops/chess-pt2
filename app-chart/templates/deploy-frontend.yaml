@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-frontend
   labels:
-    app: chess
+     {{- template "labels"}}
 spec:
   replicas: {{ .Values.frontend.replicas }}
   selector:
@@ -11,12 +11,12 @@ spec:
       instance: {{ .Release.Name }}-pod-frontend
   template:
     metadata:
-      name: front
+      name: frontend
       labels:
         instance: {{ .Release.Name }}-pod-frontend
     spec:
       containers:
-      - name: front
+      - name: frontend
         image: {{ .Values.frontend.repository}}:{{ .Values.frontend.tag}}
         imagePullPolicy: Always
         envFrom:
