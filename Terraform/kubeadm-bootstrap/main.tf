@@ -50,6 +50,163 @@ resource "aws_iam_instance_profile" "k8_profile" {
   role = aws_iam_role.k8_role
 }
 
+#lamda role here-
+
+#------------------------------------------------------------------------------#
+# Lambda + ssm
+#------------------------------------------------------------------------------#
+resource "random_string" "jwt_secret" {
+  length  = 32
+  special = false
+  upper   = false
+  number  = false
+}
+resource "random_string" "Message_key_creator" {
+  length  = 32
+  special = false
+  upper   = false
+  number  = false
+}
+
+resource "aws_ssm_parameter" "jwt_secret_parameter" {
+  name  = "JWT_SECRET"
+  type  = "SecureString"
+  value = random_string.jwt_secret.result # This will be replaced when the Lambda function runs
+
+}
+resource "aws_ssm_parameter" "MESSAGE_KEY_parameter" {
+  name  = "MESSAGE_KEY"
+  type  = "SecureString"
+  value = random_string.Message_key_creator
+
+}
+
+
+resource "aws_iam_role" "lambda_role" {
+  name = "lambda_ssm_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "lambda_ssm_attachment" {
+  name       = "lambda_ssm_attachment"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMFullAccess" # Or create a custom policy with the necessary permissions
+  roles      = [aws_iam_role.lambda_role.name]
+}
+
+resource "aws_lambda_function" "JWT_TOKEN_CREATER" {
+  function_name = "JWT_TOKEN_CREATER_lambda_function"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "index.lambda_handler"
+  runtime       = "python3.10" 
+
+ 
+
+  // Lambda function code (Python)
+  source_code = <<-PYTHON
+import boto3
+import os
+import secrets
+
+def lambda_handler(event, context):
+    # Create an instance of the AWS Systems Manager service
+    ssm = boto3.client('ssm')
+
+    try:
+        # Generate a random 32-byte string
+        jwt_secret = secrets.token_hex(32)
+
+        # Update the parameter value in AWS Systems Manager Parameter Store
+        response = ssm.put_parameter(
+            Name='JWT_SECRET',
+            Value=jwt_secret,
+            Type='SecureString',
+            Overwrite=True
+        )
+
+        return {
+            'statusCode': 200,
+            'body': 'JWT_SECRET parameter updated successfully.'
+        }
+    except Exception as e:
+        print('Error updating JWT_SECRET parameter:', e)
+        return {
+            'statusCode': 500,
+            'body': 'Error updating JWT_SECRET parameter.'
+        }
+  PYTHON
+}
+
+resource "aws_lambda_function" "Message_key_creator" {
+  function_name = "Message_key_creator_lambda_function"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "index.lambda_handler"
+  runtime       = "python3.10" 
+
+ 
+
+  // Lambda function code (Python)
+  source_code = <<-PYTHON
+import boto3
+import os
+import secrets
+
+def lambda_handler(event, context):
+    # Create an instance of the AWS Systems Manager service
+    ssm = boto3.client('ssm')
+
+    try:
+        # Generate a random 32-byte string
+        MESSAGE_KEY = secrets.token_hex(32)
+
+        # Update the parameter value in AWS Systems Manager Parameter Store
+        response = ssm.put_parameter(
+            Name='MESSAGE_KEY',
+            Value=MESSAGE_KEY,
+            Type='SecureString',
+            Overwrite=True
+        )
+
+        return {
+            'statusCode': 200,
+            'body': 'MESSAGE_KEY parameter updated successfully.'
+        }
+    except Exception as e:
+        print('Error updating MESSAGE_KEY parameter:', e)
+        return {
+            'statusCode': 500,
+            'body': 'Error updating MESSAGE_KEY parameter.'
+        }
+  PYTHON
+}
+resource "aws_cloudwatch_event_rule" "lambda_trigger" {
+  name        = "lambda_trigger_rule"
+  description = "Rule to trigger Lambda function every 24 hours"
+
+  schedule_expression = "rate(24 hours)"
+}
+resource "aws_cloudwatch_event_target" "lambda_target" {
+  rule      = aws_cloudwatch_event_rule.lambda_trigger.name
+  arn       = aws_lambda_function.Message_key_creator.arn
+  target_id = "trigger-lambda-function"
+}
+resource "aws_cloudwatch_event_target" "lambda_target" {
+  rule      = aws_cloudwatch_event_rule.lambda_trigger.name
+  arn       = aws_lambda_function.JWT_TOKEN_CREATER.arn
+  target_id = "trigger-lambda-function"
+}
+
 #------------------------------------------------------------------------------#
 # Security groups
 #------------------------------------------------------------------------------#
