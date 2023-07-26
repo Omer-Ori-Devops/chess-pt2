@@ -1,16 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-app
-  namespace: argocd
+  name: my-helm-app
+  namespace: argocd # The namespace where Argo CD is installed
 spec:
-  project: default
+  project: infra-chess # The Argo CD project this application belongs to
   source:
-    repoURL: <your_repo_url>
-    targetRevision: <your_target_revision>
-    path: <path_to_application_manifests>
+    repoURL: https://github.com/Omer-Ori-Devops/chess-pt2.git # The URL of the GitHub repository
+    path: infra-chart # The path to the Helm chart within the repository
+    targetRevision: main # The branch/tag/commit to use from the repository
+    helm:
+      valueFiles:
+        - values.yaml # (optional) You can provide any custom value files if needed
   destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: <target_namespace>
+    server: https://kubernetes.default.svc # The Kubernetes API server address
   syncPolicy:
-    automated: {}
+    automated: {} # Automatically sync changes to the application
