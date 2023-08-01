@@ -1,36 +1,40 @@
 provider "aws" {
   region  = "eu-central-1"
-  access_key = "enterhere"
-  secret_key = "enter here"
-}
-
-resource "aws_s3_bucket" "chess-ops" {
-  bucket = "chess-ops"
-  
+  access_key ="AKIAZWADYXWZTYKV5IRD"
+  secret_key ="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"
 }
 
 
 terraform {
+  required_providers{
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+
+  }
   required_version = ">= 0.12"
   backend "s3" {
-    bucket = aws_s3_bucket.chess-ops.id
+    bucket = "chess-ops"
     key    = "terraform.tfstate"
     region = "eu-central-1"
   }
 }
 
+
+
 module "kubeadm-bootstrap" {
-    BUCKET = aws_s3_bucket.chess-ops.id
+    BUCKET = "chess-op"
     source = "./kubeadm-bootstrap"
     vpc_id = "vpc id"
     cluster_name = "chess-ops"
     master_instance_type = "t2.medium"
     num_workers = 2
     worker_instance_type = "t2.medium"
-    ami_id = "id of ami"
-    private_key_file = "location of private key"
-    public_key_file = "location of public key"
-    kubeconfig = "kubeconfig.conf"
-    argo_pass = "argocd password"
+    ami_id = "ami-0dc7fe3dd38437495"
+    #private_key_file = "location of private key"
+    #public_key_file = "location of public key"
+    #kubeconfig = "kubeconfig.conf"
+    argo_pass = "omer2106"
 }
 

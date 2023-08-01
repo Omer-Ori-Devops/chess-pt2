@@ -10,12 +10,13 @@ variable "cluster_name" {
 #------------------------------------------------------------------------------#
 # Optional variables
 #------------------------------------------------------------------------------#
-
+/*
 variable "kubeconfig" {
   type        = string
   description = "Name of the kubeconfig file for the created cluster on the local machine. If this is unset, then the kubeconfig file is saved as '<cluster_name>.conf' in the current working directory."
   default     = null
 }
+*/
 
 variable "private_key_file" {
   type        = string

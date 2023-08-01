@@ -82,6 +82,8 @@ argo_port=$(kubectl get svc -n argocd argocd-server -o=jsonpath='{.spec.ports[?(
 argocd login $master_private_ip:$argo_port --username admin --password $argo_default_pass --insecure
 argocd account update-password --current-password $argo_default_pass --new-password $argo_pass
 
+kubectl apply -f https://raw.githubusercontent.com/Omer-Ori-Devops/chess-pt2/main/argocd/argo-infra.yaml?token=GHSAT0AAAAAACETQRHHRHD57U6OGY2TKW7WZGAYFMA
+
 %{~ endif ~}
 
 %{~ if node == "worker" ~}

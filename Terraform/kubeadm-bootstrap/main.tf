@@ -196,12 +196,12 @@ resource "aws_cloudwatch_event_rule" "lambda_trigger" {
 
   schedule_expression = "rate(24 hours)"
 }
-resource "aws_cloudwatch_event_target" "lambda_target" {
+resource "aws_cloudwatch_event_target" "lambda_target_message" {
   rule      = aws_cloudwatch_event_rule.lambda_trigger.name
   arn       = aws_lambda_function.Message_key_creator.arn
   target_id = "trigger-lambda-function"
 }
-resource "aws_cloudwatch_event_target" "lambda_target" {
+resource "aws_cloudwatch_event_target" "lambda_target_jwt" {
   rule      = aws_cloudwatch_event_rule.lambda_trigger.name
   arn       = aws_lambda_function.JWT_TOKEN_CREATER.arn
   target_id = "trigger-lambda-function"
