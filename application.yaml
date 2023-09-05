@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inner-app
+  namespace: argocd
+spec:
+  destination:
+    namespace: chess
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: 'app-chart'
+    repoURL: 'https://github.com/Omer-Ori-Devops/chess-pt2'
+    targetRevision: HEAD
+    helm:
+      valuesObject:
+        frontend:
+          tag: doggy
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
