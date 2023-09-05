@@ -1,6 +1,7 @@
 frontend:
   repository: omerandori/chess-client
-  tag: pooping
+  tag: testing
+
   replicas: 3
 backend:
   repository: omerandori/chess-server
